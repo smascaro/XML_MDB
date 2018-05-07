@@ -1,0 +1,7 @@
+/* run as sysdba */
+CREATE OR REPLACE DIRECTORY XML_DIR AS '/home/oracle/guest_share/git/XML_MDB/xml';
+GRANT READ,WRITE ON DIRECTORY XML_DIR TO MDB;
+COMMIT;
+
+SET SERVEROUTPUT ON;
+
