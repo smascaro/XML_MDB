@@ -63,6 +63,9 @@ END;
 EXECUTE IMPORTFROMXMLFILE('vinacar.xml');
 EXECUTE IMPORTFROMXMLFILE('randomgold.xml');
 
+
+
+
 /* function that checks if a song was already in the system and returns if it was added or not */
 CREATE OR REPLACE FUNCTION TRY_INSERT_SONG (
   URI IN VARCHAR2,
@@ -81,6 +84,8 @@ CREATE OR REPLACE FUNCTION TRY_INSERT_SONG (
   END;
   
 
+
+
 /* procedure that prints in server output xml info for a song given its ID */
 CREATE OR REPLACE PROCEDURE PRINTINFOSONG (
   SONG_ID IN INTEGER
@@ -98,7 +103,10 @@ CREATE OR REPLACE PROCEDURE PRINTINFOSONG (
     
   end;
   
-execute PRINTINFOSONG(300);
+execute PRINTINFOSONG(800);
+
+
+
 
 /* procedure that adds a song to a desired playlist, if it does not exist, playlist is created */
 CREATE OR REPLACE PROCEDURE ADDTOPLAYLIST (
@@ -148,6 +156,8 @@ EXECUTE ADDTOPLAYLIST('msk1416', 321, 'Mega mix');
 execute ADDTOPLAYLIST('msk1416', 32, 'Mega mix');
 
 
+
+
 /* procedure that exports a playlist to an xml file */
 CREATE OR REPLACE PROCEDURE EXPORTPLAYLIST (
   U_NAME USERS.USERNAME%TYPE,
@@ -189,6 +199,8 @@ CREATE OR REPLACE PROCEDURE EXPORTPLAYLIST (
 EXECUTE EXPORTPLAYLIST('bstinson', 'Mega mix');
   
 
+
+
   /* procedure to search for all songs of a particular artist and its collaborations */
 CREATE OR REPLACE PROCEDURE SEARCHBYARTIST (
   ARTIST IN VARCHAR2
@@ -208,6 +220,8 @@ CREATE OR REPLACE PROCEDURE SEARCHBYARTIST (
   end;
   
 EXECUTE SEARCHBYARTIST('6');
+
+
 
 
 /* procedure to search for longer songs (or the same) than the duration desired */
@@ -231,6 +245,8 @@ CREATE OR REPLACE PROCEDURE SEARCHBYDURATION (
 EXECUTE SEARCHBYDURATION(400000);
 
 
+
+
 /* procedure to search for songs with a name length longer or equal to the desired one  */
 CREATE OR REPLACE PROCEDURE SEARCHBYTITLELENGTH (
   t_length IN integer
@@ -250,6 +266,8 @@ CREATE OR REPLACE PROCEDURE SEARCHBYTITLELENGTH (
   end;
   
 EXECUTE SEARCHBYTITLELENGTH(50);
+
+
 
 /* procedure to search for songs with N artists collaborating */
 CREATE OR REPLACE PROCEDURE SEARCHBYNUMBEROFARTISTS (
