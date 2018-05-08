@@ -202,7 +202,7 @@ EXECUTE SEARCHBYARTIST('6');
 
 
 
-/* procedure to search for longer songs (or the same) than the duration desired */
+/* procedure to search for longer songs than the duration desired */
 CREATE OR REPLACE PROCEDURE SEARCHBYDURATION (
   duration IN integer
   ) is
@@ -225,7 +225,7 @@ EXECUTE SEARCHBYDURATION(400000);
 
 
 
-/* procedure to search for songs with a name length longer or equal to the desired one  */
+/* procedure to search for songs with a name length longer than the desired one  */
 CREATE OR REPLACE PROCEDURE SEARCHBYTITLELENGTH (
   t_length IN integer
   ) is
