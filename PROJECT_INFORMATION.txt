@@ -1,0 +1,6 @@
+Student names:
+
+- Avijit Karn - 902380
+- Sergi Mascaro - 902382
+
+Code and README also in github repository: https://github.com/msk1416/XML_MDB
