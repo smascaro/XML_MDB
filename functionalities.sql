@@ -133,29 +133,6 @@ CREATE OR REPLACE PROCEDURE ADDTOPLAYLIST (
         DBMS_OUTPUT.PUT_LINE('Either the song or the username does not exist in the system.');
   END;
   
-execute addtoplaylist('msk1416', 3, 'Happy songs');
-execute addtoplaylist('msk1416', 5, 'Happy songs');
-EXECUTE ADDTOPLAYLIST('msk1416', 78, 'Happy songs');
-EXECUTE ADDTOPLAYLIST('msk1416', 211, 'Happy songs');
-
-EXECUTE ADDTOPLAYLIST('bstinson', 32, 'Mega mix');
-EXECUTE ADDTOPLAYLIST('bstinson', 21, 'Mega mix');
-EXECUTE ADDTOPLAYLIST('bstinson', 312, 'Mega mix');
-EXECUTE ADDTOPLAYLIST('bstinson', 300, 'Mega mix');
-EXECUTE ADDTOPLAYLIST('bstinson', 209, 'Mega mix');
-EXECUTE ADDTOPLAYLIST('bstinson', 168, 'Mega mix');
-EXECUTE ADDTOPLAYLIST('bstinson', 166, 'Mega mix');
-EXECUTE ADDTOPLAYLIST('bstinson', 9, 'Mega mix');
-EXECUTE ADDTOPLAYLIST('bstinson', 76, 'Mega mix');
-EXECUTE ADDTOPLAYLIST('bstinson', 198, 'Mega mix');
-EXECUTE ADDTOPLAYLIST('bstinson', 213, 'Mega mix');
-EXECUTE ADDTOPLAYLIST('bstinson', 316, 'Mega mix');
-EXECUTE ADDTOPLAYLIST('bstinson', 56, 'Mega mix');
-execute ADDTOPLAYLIST('bstinson', 100, 'Mega mix');
-
-EXECUTE ADDTOPLAYLIST('msk1416', 321, 'Mega mix');
-execute ADDTOPLAYLIST('msk1416', 32, 'Mega mix');
-
 
 
 
