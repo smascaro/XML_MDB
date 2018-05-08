@@ -194,14 +194,14 @@ CREATE OR REPLACE PROCEDURE SEARCHBYARTIST (
   BEGIN
     FOR R IN (
     SELECT S.ID AS TMP_SID, S.INFO.EXTRACT('//Track/text()').GETSTRINGVAL() AS TMP_TRACK, S.INFO.EXTRACT('//Artist/text()').GETSTRINGVAL() AS TMP_ARTIST FROM SONGS S 
-    WHERE CONTAINS(s.info.EXTRACT('//Artist[text() = '||artist||']/..'), artist) > 0) 
+    WHERE s.info.EXTRACT('//Artist[text()[contains(.,''' || artist ||''')]]/..') is not null ) 
     LOOP
       DBMS_OUTPUT.PUT_LINE('[' || counter || '] id: ' || R.TMP_SID || ', ' || R.TMP_TRACK || ' by ' || R.TMP_ARTIST);
       COUNTER := COUNTER + 1;
     end loop;
   end;
   
-EXECUTE SEARCHBYARTIST('Boikot');
+EXECUTE SEARCHBYARTIST('Lágrimas');
 
 
 
@@ -228,7 +228,7 @@ DECLARE
 BEGIN
 FOR R IN (
   SELECT S.ID AS TMP_SID, S.INFO.EXTRACT('//Artist/text()').GETSTRINGVAL() AS TMP_ARTIST FROM SONGS S 
-  WHERE CONTAINS(s.info.EXTRACT('//song/Artist/text()'), 'Piperrak') > 0) 
+  WHERE s.info.EXTRACT('//Artist[text()[contains(.,''' || 'Lágrimas' ||''')]]/..') is not null ) 
   LOOP
     DBMS_OUTPUT.PUT_LINE('[' || COUNTER || '] id: ' || R.TMP_SID || ', artist: ' || R.TMP_ARTIST);
     counter := counter + 1;
