@@ -1,3 +1,4 @@
+/* procedure that imports into the system all songs found in the given xml file */
 CREATE OR REPLACE PROCEDURE IMPORTFROMXMLFILE (
   filename in varchar2
 )
@@ -59,8 +60,10 @@ END IF;
 
 END;
 
-execute importfromxmlfile('vinacar.xml');
+EXECUTE IMPORTFROMXMLFILE('vinacar.xml');
+EXECUTE IMPORTFROMXMLFILE('randomgold.xml');
 
+/* function that checks if a song was already in the system and returns if it was added or not */
 CREATE OR REPLACE FUNCTION TRY_INSERT_SONG (
   URI IN VARCHAR2,
   XML_ELEM XMLTYPE
@@ -78,7 +81,7 @@ CREATE OR REPLACE FUNCTION TRY_INSERT_SONG (
   END;
   
 
-
+/* procedure that prints in server output xml info for a song given its ID */
 CREATE OR REPLACE PROCEDURE PRINTINFOSONG (
   SONG_ID IN INTEGER
   ) IS
@@ -97,7 +100,7 @@ CREATE OR REPLACE PROCEDURE PRINTINFOSONG (
   
 execute PRINTINFOSONG(300);
 
-
+/* procedure that adds a song to a desired playlist, if it does not exist, playlist is created */
 CREATE OR REPLACE PROCEDURE ADDTOPLAYLIST (
     USERNAME IN VARCHAR2,
     SONG_ID IN INTEGER,
@@ -145,7 +148,7 @@ EXECUTE ADDTOPLAYLIST('msk1416', 321, 'Mega mix');
 execute ADDTOPLAYLIST('msk1416', 32, 'Mega mix');
 
 
-
+/* procedure that exports a playlist to an xml file */
 CREATE OR REPLACE PROCEDURE EXPORTPLAYLIST (
   U_NAME USERS.USERNAME%TYPE,
   PL_NAME PLAYLISTS.NAME%TYPE
@@ -185,8 +188,8 @@ CREATE OR REPLACE PROCEDURE EXPORTPLAYLIST (
   
 EXECUTE EXPORTPLAYLIST('bstinson', 'Mega mix');
   
-  /* //song/Artist[text() = 'Piperrak']/.. xpath that returns all songs from Piperrak */
-  
+
+  /* procedure to search for all songs of a particular artist and its collaborations */
 CREATE OR REPLACE PROCEDURE SEARCHBYARTIST (
   ARTIST IN VARCHAR2
   ) is
@@ -199,12 +202,15 @@ CREATE OR REPLACE PROCEDURE SEARCHBYARTIST (
       DBMS_OUTPUT.PUT_LINE('[' || counter || '] id: ' || R.TMP_SID || ', ' || R.TMP_TRACK || ' by ' || R.TMP_ARTIST);
       COUNTER := COUNTER + 1;
     end loop;
+    IF COUNTER = 1 THEN
+      DBMS_OUTPUT.PUT_LINE('No songs where found matching this criteria.');
+    END IF;
   end;
   
-EXECUTE SEARCHBYARTIST('Lágrimas');
+EXECUTE SEARCHBYARTIST('6');
 
 
-
+/* procedure to search for longer songs (or the same) than the duration desired */
 CREATE OR REPLACE PROCEDURE SEARCHBYDURATION (
   duration IN integer
   ) is
@@ -216,24 +222,58 @@ CREATE OR REPLACE PROCEDURE SEARCHBYDURATION (
     LOOP
       DBMS_OUTPUT.PUT_LINE('[' || counter || '] id: ' || R.TMP_SID || ', duration: ' || R.TMP_DURATION ||', ' || R.TMP_TRACK || ' by ' || R.TMP_ARTIST);
       COUNTER := COUNTER + 1;
-    end loop;
+    END LOOP;
+    IF COUNTER = 1 THEN
+      DBMS_OUTPUT.PUT_LINE('No songs where found matching this criteria.');
+    END IF;
   end;
   
 EXECUTE SEARCHBYDURATION(400000);
 
 
-
-DECLARE
+/* procedure to search for songs with a name length longer or equal to the desired one  */
+CREATE OR REPLACE PROCEDURE SEARCHBYTITLELENGTH (
+  t_length IN integer
+  ) is
   counter integer := 1;
-BEGIN
-FOR R IN (
-  SELECT S.ID AS TMP_SID, S.INFO.EXTRACT('//Artist/text()').GETSTRINGVAL() AS TMP_ARTIST FROM SONGS S 
-  WHERE s.info.EXTRACT('//Artist[text()[contains(.,''' || 'Lágrimas' ||''')]]/..') is not null ) 
-  LOOP
-    DBMS_OUTPUT.PUT_LINE('[' || COUNTER || '] id: ' || R.TMP_SID || ', artist: ' || R.TMP_ARTIST);
-    counter := counter + 1;
-  end loop;
-END;
+  BEGIN
+    FOR R IN (
+    SELECT S.ID AS TMP_SID, S.INFO.EXTRACT('//Track/text()').GETSTRINGVAL() AS TMP_TRACK, S.INFO.EXTRACT('//Artist/text()').GETSTRINGVAL() AS TMP_ARTIST FROM SONGS S 
+    WHERE s.info.EXTRACT('//Track[string-length(text()) > ' || t_length || ']/..') is not null) 
+    LOOP
+      DBMS_OUTPUT.PUT_LINE('[' || counter || '] id: ' || R.TMP_SID || ', length: ' || LENGTH(R.TMP_TRACK) ||' -> ' || R.TMP_TRACK || ' -- (' || R.TMP_ARTIST || ')');
+      COUNTER := COUNTER + 1;
+    END LOOP;
+    IF COUNTER = 1 THEN
+      DBMS_OUTPUT.PUT_LINE('No songs where found matching this criteria.');
+    END IF;
+  end;
+  
+EXECUTE SEARCHBYTITLELENGTH(50);
 
-CREATE INDEX xmlIndex ON SONGS(INFO) 
-       INDEXTYPE IS CTXSYS.CONTEXT;
+/* procedure to search for songs with N artists collaborating */
+CREATE OR REPLACE PROCEDURE SEARCHBYNUMBEROFARTISTS (
+  n_artists IN integer
+  ) is
+  counter integer := 1;
+  BEGIN
+    FOR R IN (
+    SELECT S.ID AS TMP_SID, S.INFO.EXTRACT('//Track/text()').GETSTRINGVAL() AS TMP_TRACK, S.INFO.EXTRACT('//Artist/text()').GETSTRINGVAL() AS TMP_ARTIST FROM SONGS S 
+    WHERE REGEXP_COUNT(s.info.EXTRACT('//song/Artist/text()').getStringVal(), ',') = n_artists - 1) 
+    LOOP
+      DBMS_OUTPUT.PUT_LINE('[' || counter || '] id: ' || R.TMP_SID || ', ' || R.TMP_TRACK || ' -- (' || R.TMP_ARTIST || ')');
+      COUNTER := COUNTER + 1;
+    END LOOP;
+    IF COUNTER = 1 THEN
+      DBMS_OUTPUT.PUT_LINE('No songs where found matching this criteria.');
+    END IF;
+  end;
+  
+EXECUTE SEARCHBYNUMBEROFARTISTS(3);
+EXECUTE SEARCHBYNUMBEROFARTISTS(4);
+EXECUTE SEARCHBYNUMBEROFARTISTS(1);
+EXECUTE SEARCHBYNUMBEROFARTISTS(0);
+
+
+
+
