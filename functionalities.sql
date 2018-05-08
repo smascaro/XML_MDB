@@ -1,3 +1,23 @@
+/* function that checks if a song was already in the system and returns if it was added or not */
+CREATE OR REPLACE FUNCTION TRY_INSERT_SONG (
+  URI IN VARCHAR2,
+  XML_ELEM XMLTYPE
+  ) RETURN INTEGER
+  is
+  
+  BEGIN
+    INSERT INTO SONGS VALUES (ID_SEQ.NEXTVAL, URI, XML_ELEM);
+    IF SQL%ROWCOUNT > 0 THEN
+      RETURN 1;
+    end if;
+    EXCEPTION
+      WHEN DUP_VAL_ON_INDEX THEN
+        RETURN 0;
+  END;
+  
+  
+
+
 /* procedure that imports into the system all songs found in the given xml file */
 CREATE OR REPLACE PROCEDURE IMPORTFROMXMLFILE (
   filename in varchar2
@@ -63,25 +83,6 @@ END;
 EXECUTE IMPORTFROMXMLFILE('vinacar.xml');
 EXECUTE IMPORTFROMXMLFILE('randomgold.xml');
 
-
-
-
-/* function that checks if a song was already in the system and returns if it was added or not */
-CREATE OR REPLACE FUNCTION TRY_INSERT_SONG (
-  URI IN VARCHAR2,
-  XML_ELEM XMLTYPE
-  ) RETURN INTEGER
-  is
-  
-  BEGIN
-    INSERT INTO SONGS VALUES (ID_SEQ.NEXTVAL, URI, XML_ELEM);
-    IF SQL%ROWCOUNT > 0 THEN
-      RETURN 1;
-    end if;
-    EXCEPTION
-      WHEN DUP_VAL_ON_INDEX THEN
-        RETURN 0;
-  END;
   
 
 
