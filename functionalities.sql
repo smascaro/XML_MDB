@@ -82,6 +82,7 @@ END;
 
 EXECUTE IMPORTFROMXMLFILE('vinacar.xml');
 EXECUTE IMPORTFROMXMLFILE('randomgold.xml');
+execute importfromxmlfile('fapyrt.xml');
 
   
 
@@ -104,7 +105,7 @@ CREATE OR REPLACE PROCEDURE PRINTINFOSONG (
     
   end;
   
-execute PRINTINFOSONG(800);
+execute PRINTINFOSONG(150);
 
 
 
@@ -134,7 +135,9 @@ CREATE OR REPLACE PROCEDURE ADDTOPLAYLIST (
   END;
   
 
-
+EXECUTE ADDTOPLAYLIST('msk1416', 80, 'Car list'); 
+EXECUTE ADDTOPLAYLIST('msk1416', 90, 'Car list'); 
+execute ADDTOPLAYLIST('msk1416', 100, 'Car list'); 
 
 /* procedure that exports a playlist to an xml file */
 CREATE OR REPLACE PROCEDURE EXPORTPLAYLIST (
@@ -175,6 +178,7 @@ CREATE OR REPLACE PROCEDURE EXPORTPLAYLIST (
   END;
   
 EXECUTE EXPORTPLAYLIST('bstinson', 'Mega mix');
+execute exportplaylist('msk1416', 'Car list');
   
 
 
@@ -198,7 +202,7 @@ CREATE OR REPLACE PROCEDURE SEARCHBYARTIST (
   end;
   
 EXECUTE SEARCHBYARTIST('6');
-
+execute searchbyartist('Cabra');
 
 
 
@@ -221,6 +225,7 @@ CREATE OR REPLACE PROCEDURE SEARCHBYDURATION (
   end;
   
 EXECUTE SEARCHBYDURATION(400000);
+execute searchbyduration(0);
 
 
 
